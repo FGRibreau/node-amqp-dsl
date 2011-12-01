@@ -1,0 +1,28 @@
+{
+    "name" : "amqp-dsl",
+    "description" : "Amqp-DSL - Fluent interface for node-amqp",
+    "keywords": ["amqp","dsl"],
+    "version": "1.0.0",
+    "homepage": "https://github.com/FGRibreau/node-amqp-dsl",
+    "repository": "git://github.com/FGRibreau/node-amqp-dsl.git",
+    
+    "dependencies": { 
+        "coffee-script":"1.0.0",
+        "async":"0.1.x",
+        "amqp":"0.1.x",
+        "docco":"0.3.x"
+    },
+
+    "devDependencies":{
+        "vows":"0.6.x"
+    },
+
+    "scripts": {
+        "test": "./node_modules/vows/bin/vows --spec"
+    },
+
+    "repository": "",
+    "author" : "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com)",
+    "main" : "lib/AmqpDsl",
+    "engines": { "node": ">= 0.4.12" }
+}

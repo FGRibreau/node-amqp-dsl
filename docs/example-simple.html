@@ -1,0 +1,59 @@
+<!DOCTYPE html>  <html> <head>   <title>example-simple.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="example-advanced.html">                 example-advanced.coffee               </a>                                           <a class="source" href="example-connection.html">                 example-connection.coffee               </a>                                           <a class="source" href="example-simple.html">                 example-simple.coffee               </a>                                           <a class="source" href="AmqpDsl.html">                 AmqpDsl.coffee               </a>                                           <a class="source" href="AmqpExchange.html">                 AmqpExchange.coffee               </a>                                           <a class="source" href="AmqpQueue.html">                 AmqpQueue.coffee               </a>                                           <a class="source" href="IndexedList.html">                 IndexedList.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               example-simple.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nv">AmqpDsl = </span><span class="nx">require</span> <span class="s1">&#39;amqp-dsl&#39;</span>
+
+
+<span class="nx">AmqpDsl</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>First we log in, here the list of the available parameters and their default value</p>
+
+<pre><code>{ 
+  login: 'guest'
+  password: 'guest'
+  host:'localhost'
+  port: 5672
+  vhost: '/'
+}
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="p">.</span><span class="nx">login</span><span class="p">(</span>
+    <span class="nv">login: </span><span class="s1">&#39;legen&#39;</span>
+    <span class="nv">password: </span><span class="s1">&#39;dary&#39;</span>
+  <span class="p">)</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Bind listeners to some events (available events are <code>close</code>, <code>error</code> and <code>ready</code>)</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="p">.</span><span class="kc">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="nf">() -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span> <span class="s2">&quot;RabbitMQ connection closed&quot;</span><span class="p">)</span>
+  <span class="p">.</span><span class="kc">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="nf">(err) -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">error</span> <span class="s2">&quot;RabbitMQ error&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+  <span class="p">.</span><span class="kc">on</span><span class="p">(</span><span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="nf">() -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to RabbitMQ&quot;</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>We create a queue (<code>passive: false</code> see AMQP doc) with <code>.queue</code></p>
+
+<ul>
+<li><code>.queue( name, options )</code></li>
+<li><code>.queue( name, callback(queue) )</code></li>
+<li><code>.queue( name, options, callback(queue) )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="p">.</span><span class="nx">queue</span><span class="p">(</span><span class="s1">&#39;testQueue&#39;</span><span class="p">,</span> <span class="nf">(queue) -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to Queue&quot;</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>(optional) ... and bind that queue to an exchange with <code>.bind</code></p>
+
+<ul>
+<li><code>.bind( name, routingKey )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>(optional) ... and subscribe for messages (without <code>ack</code> in this example)</p>
+
+<ul>
+<li><code>.subscribe( callback(message, header, deliveryInfo) )</code></li>
+<li><code>.subscribe( options, callback(message, header, deliveryInfo) )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nf">(message, header, deliveryInfo) -&gt;</span> <span class="p">)</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Create another queue <code>queue2</code> that will be binded to <code>search</code> exchange with the routing key <code>#.ok</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="p">.</span><span class="nx">queue</span><span class="p">(</span><span class="s1">&#39;queue2&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">,</span> <span class="s1">&#39;#.ok&#39;</span><span class="p">)</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Connect to an existing queue <code>queue3</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="p">.</span><span class="nx">queue</span><span class="p">(</span><span class="s1">&#39;queue3&#39;</span><span class="p">,</span> <span class="nx">passive</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span> <span class="nf">(queue)-&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to Queue&quot;</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>And now it's time to connect !
+<code>amqp</code> contains:</p>
+
+<ul>
+<li><code>amqp.connections</code> == <code>[node-amqp::Connection]</code></li>
+<li><code>amqp.queues</code> == <code>{}</code></li>
+<li><code>amqp.exchanges</code> == <code>{}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nf">(err, amqp) -&gt;</span>
+
+    <span class="k">if</span> <span class="nx">err</span>
+      <span class="k">throw</span> <span class="nx">err</span>
+      <span class="k">return</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s1">&#39;We are connected !&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Do other stuff with <code>amqp</code> like subscribing to a queue</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">queue3 = </span><span class="nx">amqp</span><span class="p">.</span><span class="nx">queues</span><span class="p">.</span><span class="nx">queue3</span>
+    
+    <span class="nx">queue3</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">ack</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span> <span class="nf">(message) -&gt;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Hey ! We got one new message !&quot;</span>
+      <span class="nx">queue3</span><span class="p">.</span><span class="nx">shift</span><span class="p">()</span>
+    <span class="p">)</span>
+
+  <span class="p">)</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>  <html> <head>   <title>example-advanced.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="example-advanced.html">                 example-advanced.coffee               </a>                                           <a class="source" href="example-connection.html">                 example-connection.coffee               </a>                                           <a class="source" href="example-simple.html">                 example-simple.coffee               </a>                                           <a class="source" href="AmqpDsl.html">                 AmqpDsl.coffee               </a>                                           <a class="source" href="AmqpExchange.html">                 AmqpExchange.coffee               </a>                                           <a class="source" href="AmqpQueue.html">                 AmqpQueue.coffee               </a>                                           <a class="source" href="IndexedList.html">                 IndexedList.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               example-advanced.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="nv">AmqpDsl = </span><span class="nx">require</span> <span class="s1">&#39;amqp-dsl&#39;</span>
+
+
+<span class="nx">AmqpDsl</span>
+  <span class="p">.</span><span class="nx">login</span><span class="p">(</span>
+    <span class="nv">login: </span><span class="s1">&#39;legen&#39;</span>
+    <span class="nv">password: </span><span class="s1">&#39;waitforit&#39;</span>
+    <span class="nv">host: </span><span class="s1">&#39;dary&#39;</span>
+    <span class="nv">port: </span><span class="mi">2290</span>
+    <span class="nv">vhost: </span><span class="s1">&#39;/legendary&#39;</span>
+  <span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Exchanges, queues and event listener can be declared wherever you want between <code>login</code> and <code>connect</code></p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="p">.</span><span class="kc">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="nf">() -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Close &quot;</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+  <span class="p">.</span><span class="kc">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="nf">() -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Error &quot;</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span>
+  
+  <span class="p">.</span><span class="nx">queue</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="nx">passive</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span> <span class="nf">(queue) -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to Queue&quot;</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nf">(message, header, deliveryInfo) -&gt;</span> <span class="p">)</span>
+
+  <span class="p">.</span><span class="nx">queue</span><span class="p">(</span><span class="s1">&#39;queue2&#39;</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;search&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span>
+
+  <span class="p">.</span><span class="nx">exchange</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">,</span> <span class="nx">passive</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span> <span class="nf">(exchange) -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to Exchange&quot;</span><span class="p">,</span> <span class="nx">exchange</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+
+  <span class="p">.</span><span class="nx">exchange</span><span class="p">(</span><span class="s1">&#39;createdExchg&#39;</span><span class="p">)</span>
+  
+  <span class="p">.</span><span class="nx">queue</span><span class="p">(</span><span class="s1">&#39;queue3&#39;</span><span class="p">,</span> <span class="nf">(queue)-&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to Queue&quot;</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;createdExchg&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span>
+  
+  <span class="p">.</span><span class="kc">on</span><span class="p">(</span><span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="nf">() -&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to RabbitMQ&quot;</span><span class="p">)</span>
+
+  <span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nf">(err, amqp) -&gt;</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to #{Object.keys(amqp.exchanges).length} exchanges&quot;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s2">&quot;Connected to #{Object.keys(amqp.queues).length} queues&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>All queues &amp; exchanges declared with AMQP-DSL can be accessible through amqp.queues &amp; amqp.exchanges</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nv">queue3 = </span><span class="nx">amqp</span><span class="p">.</span><span class="nx">queues</span><span class="p">.</span><span class="nx">queue3</span>
+
+    <span class="nx">queue3</span><span class="p">.</span><span class="nx">subcribe</span><span class="p">(</span><span class="nx">ack</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span> <span class="nf">(message) -&gt;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">message</span>
+      <span class="nx">queue3</span><span class="p">.</span><span class="nx">shift</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="nv">createdExchg = </span><span class="nx">amqp</span><span class="p">.</span><span class="nx">exchanges</span><span class="p">.</span><span class="nx">createdExchg</span>
+
+    <span class="nx">createdExchg</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="s2">&quot;routingKey&quot;</span><span class="p">,</span> <span class="nx">hello</span><span class="o">:</span><span class="s2">&quot;world&quot;</span><span class="p">)</span>
+
+  <span class="p">)</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

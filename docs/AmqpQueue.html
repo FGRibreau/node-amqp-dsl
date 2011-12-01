@@ -1,0 +1,30 @@
+<!DOCTYPE html>  <html> <head>   <title>AmqpQueue.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="example-advanced.html">                 example-advanced.coffee               </a>                                           <a class="source" href="example-connection.html">                 example-connection.coffee               </a>                                           <a class="source" href="example-simple.html">                 example-simple.coffee               </a>                                           <a class="source" href="AmqpDsl.html">                 AmqpDsl.coffee               </a>                                           <a class="source" href="AmqpExchange.html">                 AmqpExchange.coffee               </a>                                           <a class="source" href="AmqpQueue.html">                 AmqpQueue.coffee               </a>                                           <a class="source" href="IndexedList.html">                 IndexedList.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               AmqpQueue.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>AMQP Queue class for AMQP DSL</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">module.exports = </span><span class="k">class</span> <span class="nx">AmqpQueue</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <ul>
+<li><code>queue( name, options )</code></li>
+<li><code>queue( name, callback(queue) )</code></li>
+<li><code>queue( name, options, callback(queue) )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">constructor</span><span class="o">:</span><span class="nf">( @name, options, openCallback) -&gt;</span>
+    <span class="k">if</span> <span class="o">!</span><span class="nx">@name</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Queue must have a name&quot;</span><span class="p">)</span>
+
+    <span class="vi">@options = </span><span class="p">{}</span>
+    <span class="vi">@openCallback = </span><span class="o">-&gt;</span>
+
+    <span class="k">if</span> <span class="k">typeof</span> <span class="nx">options</span> <span class="o">==</span> <span class="s2">&quot;function&quot;</span>
+      <span class="vi">@openCallback = </span><span class="nx">options</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="k">typeof</span> <span class="nx">options</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span>
+      <span class="vi">@options = </span><span class="nx">options</span>
+
+    <span class="k">if</span> <span class="k">typeof</span> <span class="nx">openCallback</span> <span class="o">==</span> <span class="s2">&quot;function&quot;</span>
+      <span class="vi">@openCallback = </span><span class="nx">openCallback</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Real reference to an AMQP::Queue object</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@ref = </span><span class="kc">null</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <ul>
+<li><code>.bind( name, routingKey )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">bind</span><span class="o">:</span><span class="nf">( @exchangeName, @routingKey ) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <ul>
+<li><code>subscribe( callback(message, header, deliveryInfo) )</code></li>
+<li><code>subscribe( options, callback(message, header, deliveryInfo) )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">subscribe</span><span class="o">:</span><span class="nf">( @sOptions, @messageListener ) -&gt;</span>
+    <span class="k">if</span> <span class="k">typeof</span> <span class="nx">@sOptions</span> <span class="o">==</span> <span class="s1">&#39;function&#39;</span>
+      <span class="vi">@messageListener = </span><span class="nx">@sOptions</span>
+      <span class="vi">@sOptions = </span><span class="p">{}</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
