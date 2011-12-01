@@ -1,0 +1,8 @@
+# node
+node_modules
+
+*.rdb
+*.log
+
+# mac
+DS_STORE

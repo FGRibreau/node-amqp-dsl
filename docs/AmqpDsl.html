@@ -1,0 +1,176 @@
+<!DOCTYPE html>  <html> <head>   <title>AmqpDsl.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="example-advanced.html">                 example-advanced.coffee               </a>                                           <a class="source" href="example-connection.html">                 example-connection.coffee               </a>                                           <a class="source" href="example-simple.html">                 example-simple.coffee               </a>                                           <a class="source" href="AmqpDsl.html">                 AmqpDsl.coffee               </a>                                           <a class="source" href="AmqpExchange.html">                 AmqpExchange.coffee               </a>                                           <a class="source" href="AmqpQueue.html">                 AmqpQueue.coffee               </a>                                           <a class="source" href="IndexedList.html">                 IndexedList.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               AmqpDsl.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>Amqp-DSL - Fluent interface for node-amqp</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">async = </span><span class="nx">require</span> <span class="s1">&#39;async&#39;</span>
+
+<span class="nv">IndexedList = </span><span class="nx">require</span> <span class="s1">&#39;./IndexedList&#39;</span>
+<span class="nv">AmqpQueue = </span><span class="nx">require</span> <span class="s1">&#39;./AmqpQueue&#39;</span>
+<span class="nv">AmqpExchange = </span><span class="nx">require</span> <span class="s1">&#39;./AmqpExchange&#39;</span>
+
+<span class="nv">module.exports = </span><span class="k">class</span> <span class="nx">AmqpDsl</span>
+
+  <span class="nx">LISTENNERS</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="s1">&#39;close&#39;</span><span class="p">,</span><span class="s1">&#39;ready&#39;</span><span class="p">]</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h1>Public API</h1>
+
+<h3>require('amqp-dsl').login</h3>
+
+<ul>
+<li><code>login( options = {} )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">AmqpDsl.login = </span><span class="nf">(opt = {}) -&gt;</span>
+    <span class="k">new</span> <span class="nx">AmqpDsl</span><span class="p">(</span><span class="nx">opt</span><span class="p">)</span>
+
+  <span class="nx">constructor</span><span class="o">:</span><span class="nf">(opt = {}) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Defaults</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@_login = </span><span class="s1">&#39;&#39;</span>
+    <span class="vi">@_password = </span><span class="s1">&#39;&#39;</span>
+    <span class="vi">@_host = </span><span class="s1">&#39;&#39;</span>
+    <span class="vi">@_port = </span><span class="mi">5672</span>
+    <span class="vi">@_vhost = </span><span class="s1">&#39;/&#39;</span>
+
+    <span class="vi">@_conn = </span><span class="kc">null</span>
+    <span class="vi">@_callback = </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Constructor arguments</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">opt</span><span class="p">.</span><span class="nx">login</span> <span class="o">and</span> <span class="p">(</span><span class="vi">@_login = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">login</span><span class="p">)</span>
+    <span class="nx">opt</span><span class="p">.</span><span class="nx">password</span> <span class="o">and</span> <span class="p">(</span><span class="vi">@_password = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">password</span><span class="p">)</span>
+    <span class="nx">opt</span><span class="p">.</span><span class="nx">host</span> <span class="o">and</span> <span class="p">(</span><span class="vi">@_host = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">host</span><span class="p">)</span>
+    <span class="nx">opt</span><span class="p">.</span><span class="nx">port</span> <span class="o">and</span> <span class="p">(</span><span class="vi">@_port = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">port</span><span class="p">)</span>
+    <span class="nx">opt</span><span class="p">.</span><span class="nx">vhost</span> <span class="o">and</span> <span class="p">(</span><span class="vi">@_vhost = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">vhost</span><span class="p">)</span>
+    <span class="nx">opt</span><span class="p">.</span><span class="nx">login</span> <span class="o">and</span> <span class="p">(</span><span class="vi">@_login = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">login</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Events</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@_events = </span><span class="p">{}</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Exchanges</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@_exchanges = </span><span class="k">new</span> <span class="nx">IndexedList</span><span class="p">()</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Queues</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@_queues = </span><span class="k">new</span> <span class="nx">IndexedList</span><span class="p">()</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>.on</h3>
+
+<ul>
+<li><code>on( event, listener )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kc">on</span><span class="o">:</span><span class="nf">( event, listener ) -&gt;</span>
+    <span class="k">if</span> <span class="o">!~</span><span class="nx">LISTENNERS</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Event &#39;#{event}&#39; is invalid&quot;</span><span class="p">)</span>
+
+    <span class="nx">@_events</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">@_events</span><span class="p">[</span><span class="nx">event</span><span class="p">])</span>
+
+    <span class="nx">@_events</span><span class="p">[</span><span class="nx">event</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">listener</span><span class="p">)</span>
+
+    <span class="k">this</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3>.exchange</h3>
+
+<ul>
+<li><code>.exchange( name, options )</code></li>
+<li><code>.exchange( name, callback(exchange) )</code></li>
+<li><code>.exchange( name, options, callback(exchange) )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">exchange</span><span class="o">:</span><span class="nf">( name, options, openCallback ) -&gt;</span>
+    <span class="nx">@_exchanges</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="k">new</span> <span class="nx">AmqpExchange</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">openCallback</span><span class="p">))</span>
+    <span class="k">this</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>.queue</h3>
+
+<ul>
+<li><code>.queue( name, options )</code></li>
+<li><code>.queue( name, callback(queue) )</code></li>
+<li><code>.queue( name, options, callback(queue) )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">queue</span><span class="o">:</span><span class="nf">( name, options, openCallback ) -&gt;</span>
+    <span class="nx">@_queues</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="k">new</span> <span class="nx">AmqpQueue</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">openCallback</span><span class="p">))</span>
+    <span class="k">this</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3>.queue(...).subscribe</h3>
+
+<ul>
+<li><code>.subscribe( callback(message, header, deliveryInfo) )</code></li>
+<li><code>.subscribe( options, callback(message, header, deliveryInfo) )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">subscribe</span><span class="o">:</span><span class="nf">( options, messageListener ) -&gt;</span>
+    <span class="nv">queue = </span><span class="nx">@_queues</span><span class="p">.</span><span class="nx">last</span><span class="p">()</span>
+    
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;At least one queue must be declared&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="o">!</span><span class="nx">queue</span>
+    
+    <span class="nx">queue</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">messageListener</span><span class="p">)</span>
+    <span class="k">this</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3>.queue(...).bind</h3>
+
+<ul>
+<li><code>.bind( name, routingKey )</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">bind</span><span class="o">:</span><span class="nf">( name, routingKey ) -&gt;</span>
+    <span class="nv">queue = </span><span class="nx">@_queues</span><span class="p">.</span><span class="nx">last</span><span class="p">()</span>
+    
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;At least one queue must be declared&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="o">!</span><span class="nx">queue</span>
+
+    <span class="nx">queue</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">routingKey</span><span class="p">)</span>
+    <span class="k">this</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3>.connect</h3>
+
+<ul>
+<li><code>.connect( amqp, callback(err, amqp) )</code></li>
+<li><code>.connect( callback(err, amqp) )</code></li>
+</ul>
+
+<p><code>amqp</code> parameter is an hashtable which contain</p>
+
+<pre><code>  queues:
+     sampleQueue:[Amqp::Queue]
+
+  exchanges:
+     sampleExchange:[Amqp::Exchange]
+
+  connection: [Amqp::Connection]
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">connect</span><span class="o">:</span><span class="nf">(amqp, @_callback)-&gt;</span>
+
+    <span class="k">if</span> <span class="k">typeof</span> <span class="nx">amqp</span> <span class="o">is</span> <span class="s2">&quot;function&quot;</span>
+      <span class="vi">@_callback = </span><span class="nx">amqp</span>
+      <span class="nv">amqp = </span><span class="nx">require</span> <span class="s1">&#39;amqp&#39;</span>
+    
+    <span class="nx">@_connect</span><span class="p">(</span><span class="nx">amqp</span><span class="p">)</span>
+
+    <span class="kc">null</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h1>Private API</h1>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Create the connection to amqp and bind events</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_connect</span><span class="o">:</span><span class="nf">(amqp) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Create connection</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="vi">@conn = </span><span class="nx">amqp</span><span class="p">.</span><span class="nx">createConnection</span><span class="p">({</span>
+      <span class="nv">host: </span><span class="nx">@_host</span><span class="p">,</span>
+      <span class="nv">port: </span><span class="nx">@_port</span><span class="p">,</span>
+      <span class="nv">login: </span><span class="nx">@_login</span><span class="p">,</span>
+      <span class="nv">password: </span><span class="nx">@_password</span><span class="p">,</span>
+      <span class="nv">vhost: </span><span class="nx">@_vhost</span>
+    <span class="p">})</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>When the connection will be ready, connect the exchanges</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">@on</span> <span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">@_connectExchanges</span><span class="p">(</span><span class="nx">@_connectQueues</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">))</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Set event listeners</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">@conn</span><span class="p">.</span><span class="kc">on</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">@_getListenerFor</span><span class="p">(</span><span class="nx">event</span><span class="p">))</span> <span class="k">for</span> <span class="nx">event</span> <span class="k">of</span> <span class="nx">@_events</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Return a listener fonction for the event <code>event</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">_getListenerFor: </span><span class="nf">(event) -&gt;</span>
+
+    <span class="k">if</span> <span class="nx">@_events</span><span class="p">[</span><span class="nx">event</span><span class="p">].</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span>
+      <span class="k">return</span> <span class="nx">@_events</span><span class="p">[</span><span class="nx">event</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span>
+      <span class="k">return</span> <span class="p">(</span><span class="nx">args</span><span class="p">...)</span> <span class="o">=&gt;</span>
+        <span class="nx">listener</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="k">for</span> <span class="nx">listener</span> <span class="k">in</span> <span class="nx">@_events</span><span class="p">[</span><span class="nx">event</span><span class="p">]</span>
+        <span class="kc">true</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Connect to exchanges</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_connectExchanges</span><span class="o">:</span><span class="nf">(next) -&gt;</span>
+    
+    <span class="nx">async</span><span class="p">.</span><span class="nx">forEach</span> <span class="nx">@_exchanges</span><span class="p">.</span><span class="nx">list</span><span class="p">(),</span> <span class="nx">@_connectExchange</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="err">@</span><span class="p">),</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span>
+      <span class="k">if</span> <span class="nx">err</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t connect to the exchanges: #{err.message}&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+      
+      <span class="nx">next</span><span class="p">()</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Exchange connection iterator</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_connectExchange</span><span class="o">:</span><span class="nf">(exchange, callback) -&gt;</span>
+
+    <span class="nx">@conn</span><span class="p">.</span><span class="nx">exchange</span> <span class="nx">exchange</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">exchange</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span> <span class="nf">(exchangeRef) -&gt;</span>
+      <span class="nv">exchange.ref = </span><span class="nx">exchangeRef</span>
+      <span class="nx">exchange</span><span class="p">.</span><span class="nx">openCallback</span><span class="p">(</span><span class="nx">exchangeRef</span><span class="p">)</span>
+
+      <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Connect to queues</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_connectQueues</span><span class="o">:</span><span class="nf">() -&gt;</span>
+
+    <span class="nx">async</span><span class="p">.</span><span class="nx">forEach</span> <span class="nx">@_queues</span><span class="p">.</span><span class="nx">list</span><span class="p">(),</span> <span class="nx">@_connectQueue</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="err">@</span><span class="p">),</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span>
+      <span class="k">if</span> <span class="nx">err</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Couldn&#39;t connect to the queues: #{err.message}&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+      
+      <span class="nx">@_done</span><span class="p">()</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Queue connection iterator</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_connectQueue</span><span class="o">:</span><span class="nf">(queue, callback) -&gt;</span>
+
+    <span class="nx">@conn</span><span class="p">.</span><span class="nx">queue</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span> <span class="nf">(queueRef) -&gt;</span>
+      <span class="nv">queue.ref = </span><span class="nx">queueRef</span>
+
+      <span class="nx">queue</span><span class="p">.</span><span class="nx">openCallback</span><span class="p">(</span><span class="nx">queueRef</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">exchangeName</span>
+        <span class="nx">queueRef</span><span class="p">.</span><span class="nx">bind</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">exchangeName</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">routingKey</span>
+      
+      <span class="k">if</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">messageListener</span>
+        <span class="nx">queueRef</span><span class="p">.</span><span class="nx">subscribe</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">sOptions</span><span class="p">,</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">messageListener</span>
+      
+      <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+  </pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>When everything's connected, trigger the final callback</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_done</span><span class="o">:</span><span class="nf">() -&gt;</span>
+
+    <span class="nv">msg =</span>
+      <span class="nv">queues      : </span><span class="p">{}</span>
+      <span class="nv">exchanges   : </span><span class="p">{}</span>
+      <span class="nv">connection  : </span><span class="nx">@conn</span>
+    
+    <span class="k">for</span> <span class="nx">k</span><span class="p">,</span><span class="nx">v</span> <span class="k">of</span> <span class="nx">@_queues</span><span class="p">.</span><span class="nx">index</span><span class="p">()</span>
+      <span class="nx">msg</span><span class="p">.</span><span class="nx">queues</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">v</span><span class="p">.</span><span class="nx">ref</span>
+    
+    <span class="k">for</span> <span class="nx">k</span><span class="p">,</span><span class="nx">v</span> <span class="k">of</span> <span class="nx">@_exchanges</span><span class="p">.</span><span class="nx">index</span><span class="p">()</span>
+      <span class="nx">msg</span><span class="p">.</span><span class="nx">exchanges</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="nx">v</span><span class="p">.</span><span class="nx">ref</span>
+
+    <span class="nx">@_callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">msg</span><span class="p">)</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
