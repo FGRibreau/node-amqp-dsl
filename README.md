@@ -12,64 +12,64 @@ AMQP-DSL is a [fluent interface](http://en.wikipedia.org/wiki/Fluent_interface) 
 
 ```coffeescript
 
-    amqp = require 'amqp-dsl'
+amqp = require 'amqp-dsl'
 
-    amqp.login(
+amqp.login(
 
-      login: 'user'
-      password: 'password'
-      host: 'localhost'
+  login: 'user'
+  password: 'password'
+  host: 'localhost'
 
-    ).connect((err, amqp) ->
+).connect((err, amqp) ->
 
-      if err
-        throw err
-        return
-      
-      console.log 'We are connected !'
-      
-    )
+  if err
+    throw err
+    return
+  
+  console.log 'We are connected !'
+  
+)
 ```
 
 ### Simple example (more details: `docs/example-simple`)
 
 ```coffeescript
 
-    AmqpDsl = require 'amqp-dsl'
+AmqpDsl = require 'amqp-dsl'
 
-    AmqpDsl.login(
-      login: 'legen'
-      password: 'dary'
-    )
-    .on( 'close', () -> console.error "RabbitMQ connection closed" )
-    .on( 'error', (err) -> console.error "RabbitMQ error", err )
-    .on( 'ready', () -> console.log "Connected to RabbitMQ" )
+AmqpDsl.login(
+  login: 'legen'
+  password: 'dary'
+)
+.on( 'close', () -> console.error "RabbitMQ connection closed" )
+.on( 'error', (err) -> console.error "RabbitMQ error", err )
+.on( 'ready', () -> console.log "Connected to RabbitMQ" )
 
-    .queue( 'testQueue', (queue) -> console.log "Connected to Queue", queue.name )
-      .bind( 'stream', '#' )
-      .subscribe( (message, header, deliveryInfo) -> )
+.queue( 'testQueue', (queue) -> console.log "Connected to Queue", queue.name )
+  .bind( 'stream', '#' )
+  .subscribe( (message, header, deliveryInfo) -> )
 
-    .queue( 'queue2' )
-      .bind( 'search', '#.ok' )
+.queue( 'queue2' )
+  .bind( 'search', '#.ok' )
 
-    .queue( 'queue3', passive:true )
+.queue( 'queue3', passive:true )
 
-    .connect( (err, amqp) ->
+.connect( (err, amqp) ->
 
-      if err
-        throw err
-        return
+  if err
+    throw err
+    return
 
-      # Do other stuff with `amqp` like subscribing to a queue
+  # Do other stuff with `amqp` like subscribing to a queue
 
-      queue3 = amqp.queues.queue3
-      
-      queue3.subscribe( ack:true, ( message, header, deliveryInfo ) ->
-        console.log "Hey ! We got one new message !"
-        queue3.shift()
-      )
+  queue3 = amqp.queues.queue3
+  
+  queue3.subscribe( ack:true, ( message, header, deliveryInfo ) ->
+    console.log "Hey ! We got one new message !"
+    queue3.shift()
+  )
 
-    )
+)
 ```
 
 See `examples/` and `docs/` for more information.
@@ -103,10 +103,11 @@ See `examples/` and `docs/` for more information.
  * `.connect( amqp, callback(err, amqp) )`
  * `.connect( callback(err, amqp) )`
  
- `amqp` contains
-      * queues (hashtable of `AMQP::queues`)
-      * exchanges (hashtable of `AMQP::Exchange`)
-      * connection (`AMQP::Connection`)
+The `amqp` argument is simply hashtable with the following properties:
+
+ * queues (hashtable of `AMQP::queues`)
+ * exchanges (hashtable of `AMQP::Exchange`)
+ * connection (`AMQP::Connection`)
 
 
 ## Documentation
