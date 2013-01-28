@@ -123,6 +123,7 @@ The `amqp` argument is simply hashtable with the following properties:
     $ npm test
 
 ## Release History
+v1.0.2 - Critical bug fix
 v1.0.1 - .bind & .subscribe can now be called multiple times. This is the behavior that should have been in place since the beginning.
 
 ## License

@@ -184,12 +184,12 @@ module.exports = class AmqpDsl
       queue.openCallback(queueRef)
 
       queue.bindTo.forEach((bind) ->
-        {exchange, routingKey} = bind
+        [exchange, routingKey] = bind
         queueRef.bind exchange, routingKey
       )
 
       queue.listenTo.forEach((listen) ->
-        {option, listener} = listen
+        [option, listener] = listen
         queueRef.subscribe option, listener
       )
 
