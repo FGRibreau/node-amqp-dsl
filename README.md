@@ -25,9 +25,9 @@ amqp.login(
   if err
     throw err
     return
-  
+
   console.log 'We are connected !'
-  
+
 )
 ```
 
@@ -47,6 +47,7 @@ AmqpDsl.login(
 
 .queue( 'testQueue', (queue) -> console.log "Connected to Queue", queue.name )
   .bind( 'stream', '#' )
+  .bind( 'stream2', 'routing.key' )
   .subscribe( (message, header, deliveryInfo) -> )
 
 .queue( 'queue2' )
@@ -63,7 +64,7 @@ AmqpDsl.login(
   # Do other stuff with `amqp` like subscribing to a queue
 
   queue3 = amqp.queues.queue3
-  
+
   queue3.subscribe( ack:true, ( message, header, deliveryInfo ) ->
     console.log "Hey ! We got one new message !"
     queue3.shift()
@@ -102,7 +103,7 @@ See `examples/` and `docs/` for more information.
 ### .connect
  * `.connect( amqp, callback(err, amqp) )`
  * `.connect( callback(err, amqp) )`
- 
+
 The `amqp` argument is simply hashtable with the following properties:
 
  * queues (hashtable of `AMQP::queues`)
@@ -118,5 +119,12 @@ The `amqp` argument is simply hashtable with the following properties:
 ... and browse `docs/`
 
 ## Test
-  
+
     $ npm test
+
+## Release History
+v1.0.1 - .bind & .subscribe can now be called multiple times. This is the behavior that should have been in place since the beginning.
+
+## License
+Copyright (c) 2013 Francois-Guillaume Ribreau
+Licensed under the MIT license.

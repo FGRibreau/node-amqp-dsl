@@ -8,8 +8,10 @@ module.exports = class AmqpQueue
     if !@name
       throw new Error("Queue must have a name")
 
-    @options = {}
+    @options      = {}
     @openCallback = ->
+    @bindTo       = []
+    @listenTo     = []
 
     if typeof options == "function"
       @openCallback = options
@@ -18,16 +20,19 @@ module.exports = class AmqpQueue
 
     if typeof openCallback == "function"
       @openCallback = openCallback
-    
+
     # Real reference to an AMQP::Queue object
     @ref = null
-  
+
   # * `.bind( name, routingKey )`
-  bind:( @exchangeName, @routingKey ) ->
+  bind:( exchangeName, routingKey ) ->
+    @bindTo.push([exchangeName, routingKey])
 
   # * `subscribe( callback(message, header, deliveryInfo) )`
   # * `subscribe( options, callback(message, header, deliveryInfo) )`
-  subscribe:( @sOptions, @messageListener ) ->
-    if typeof @sOptions == 'function'
-      @messageListener = @sOptions
-      @sOptions = {}
+  subscribe:( options, listener ) ->
+    if typeof options == 'function'
+      listener = options
+      options = {}
+
+    @listenTo.push([options, listener])
