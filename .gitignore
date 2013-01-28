@@ -5,4 +5,4 @@ node_modules
 *.log
 
 # mac
-DS_STORE
+.DS_Store

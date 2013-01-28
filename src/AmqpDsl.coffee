@@ -1,14 +1,14 @@
 # Amqp-DSL - Fluent interface for node-amqp
 
-async = require 'async'
+async          = require 'async'
 
-IndexedList = require './IndexedList'
-AmqpQueue = require './AmqpQueue'
-AmqpExchange = require './AmqpExchange'
+IndexedList    = require './IndexedList'
+AmqpQueue      = require './AmqpQueue'
+AmqpExchange   = require './AmqpExchange'
 
 module.exports = class AmqpDsl
 
-  LISTENNERS =['error','close','ready']
+  LISTENNERS   =['error','close','ready']
 
   ## Public API
   #### require('amqp-dsl').login
@@ -45,7 +45,7 @@ module.exports = class AmqpDsl
 
     # Queues
     @_queues = new IndexedList()
-  
+
   #### .on
   # * `on( event, listener )`
   on:( event, listener ) ->
@@ -57,7 +57,7 @@ module.exports = class AmqpDsl
     @_events[event].push(listener)
 
     this
-  
+
   #### .exchange
   # * `.exchange( name, options )`
   # * `.exchange( name, callback(exchange) )`
@@ -65,7 +65,7 @@ module.exports = class AmqpDsl
   exchange:( name, options, openCallback ) ->
     @_exchanges.set(name, new AmqpExchange(name, options, openCallback))
     this
-  
+
   #### .queue
   # * `.queue( name, options )`
   # * `.queue( name, callback(queue) )`
@@ -73,37 +73,35 @@ module.exports = class AmqpDsl
   queue:( name, options, openCallback ) ->
     @_queues.set(name, new AmqpQueue(name, options, openCallback))
     this
-  
+
   #### .queue(...).subscribe
   # * `.subscribe( callback(message, header, deliveryInfo) )`
   # * `.subscribe( options, callback(message, header, deliveryInfo) )`
   subscribe:( options, messageListener ) ->
     queue = @_queues.last()
-    
+
     throw new Error("At least one queue must be declared") if !queue
-    
+
     queue.subscribe(options, messageListener)
     this
-  
+
   #### .queue(...).bind
   # * `.bind( name, routingKey )`
   bind:( name, routingKey ) ->
     queue = @_queues.last()
-    
     throw new Error("At least one queue must be declared") if !queue
-
     queue.bind(name, routingKey)
     this
-  
+
   #### .connect
   # * `.connect( amqp, callback(err, amqp) )`
   # * `.connect( callback(err, amqp) )`
-  # 
+  #
   # `amqp` parameter is an hashtable which contain
   #
   #       queues:
   #          sampleQueue:[Amqp::Queue]
-  #       
+  #
   #       exchanges:
   #          sampleExchange:[Amqp::Exchange]
   #
@@ -114,11 +112,11 @@ module.exports = class AmqpDsl
     if typeof amqp is "function"
       @_callback = amqp
       amqp = require 'amqp'
-    
+
     @_connect(amqp)
 
     null
-  
+
   ## Private API
 
   # Create the connection to amqp and bind events
@@ -137,7 +135,7 @@ module.exports = class AmqpDsl
 
     # Set event listeners
     @conn.on(event, @_getListenerFor(event)) for event of @_events
-  
+
   # Return a listener fonction for the event `event`.
   _getListenerFor: (event) ->
 
@@ -147,17 +145,17 @@ module.exports = class AmqpDsl
       return (args...) =>
         listener.apply(null, args) for listener in @_events[event]
         true
-  
+
   # Connect to exchanges
   _connectExchanges:(next) ->
-    
+
     async.forEach @_exchanges.list(), @_connectExchange.bind(@), (err) =>
       if err
         throw new Error("Couldn't connect to the exchanges: #{err.message}")
         return
-      
+
       next()
-  
+
   # Exchange connection iterator
   _connectExchange:(exchange, callback) ->
 
@@ -174,9 +172,9 @@ module.exports = class AmqpDsl
       if err
         throw new Error("Couldn't connect to the queues: #{err.message}")
         return
-      
+
       @_done()
-  
+
   # Queue connection iterator
   _connectQueue:(queue, callback) ->
 
@@ -185,14 +183,19 @@ module.exports = class AmqpDsl
 
       queue.openCallback(queueRef)
 
-      if queue.exchangeName
-        queueRef.bind queue.exchangeName, queue.routingKey
-      
-      if queue.messageListener
-        queueRef.subscribe queue.sOptions, queue.messageListener
-      
+      queue.bindTo.forEach((bind) ->
+        {exchange, routingKey} = bind
+        queueRef.bind exchange, routingKey
+      )
+
+      queue.listenTo.forEach((listen) ->
+        {option, listener} = listen
+        queueRef.subscribe option, listener
+      )
+
+
       callback(null, true)
-  
+
   # When everything's connected, trigger the final callback
   _done:() ->
 
@@ -200,10 +203,10 @@ module.exports = class AmqpDsl
       queues      : {}
       exchanges   : {}
       connection  : @conn
-    
+
     for k,v of @_queues.index()
       msg.queues[k] = v.ref
-    
+
     for k,v of @_exchanges.index()
       msg.exchanges[k] = v.ref
 
