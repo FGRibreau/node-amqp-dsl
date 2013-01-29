@@ -167,6 +167,13 @@ suite.addBatch
   "connect":
     topic: -> AmqpDsl.login()
 
+    "Accept ()": (cc)->
+
+      cc._connect = (amqp) ->
+        assert.equal amqp, require('amqp')
+
+      cc.connect()
+
     "Accept ( callback )": (cc)->
 
       cc._connect = (amqp) ->
