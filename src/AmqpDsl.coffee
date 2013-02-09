@@ -109,6 +109,10 @@ module.exports = class AmqpDsl
   #
   connect:(amqp, @_callback)->
 
+    if amqp is undefined
+      @_callback = ->
+      amqp = require 'amqp'
+
     if typeof amqp is "function"
       @_callback = amqp
       amqp = require 'amqp'
