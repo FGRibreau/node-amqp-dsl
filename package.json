@@ -5,12 +5,12 @@
     "amqp",
     "dsl"
   ],
-  "version": "1.0.5",
+  "version": "1.0.6",
   "homepage": "https://github.com/FGRibreau/node-amqp-dsl",
   "repository": "",
   "dependencies": {
-    "async": "0.1.x",
-    "amqp": "0.1.3",
+    "async": "0.2.6",
+    "amqp": "0.1.6",
     "docco": "0.3.x",
     "coffee-script": "~1.4.0"
   },
