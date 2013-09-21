@@ -128,6 +128,9 @@ v1.0.3 - Support for .connect()
 v1.0.2 - Critical bug fix
 v1.0.1 - .bind & .subscribe can now be called multiple times. This is the behavior that should have been in place since the beginning.
 
+## Donate
+[Donate Bitcoins](https://coinbase.com/checkouts/fc3041b9d8116e0b98e7d243c4727a30)
+
 ## License
 Copyright (c) 2013 Francois-Guillaume Ribreau
 Licensed under the MIT license.
