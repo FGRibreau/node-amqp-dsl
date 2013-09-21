@@ -1,4 +1,4 @@
-## Fluent Interface for dealing with AMQP on NodeJS [![Build Status](https://secure.travis-ci.org/FGRibreau/node-amqp-dsl.png)](http://travis-ci.org/FGRibreau/node-amqp-dsl) ##
+## Fluent Interface for dealing with AMQP on NodeJS [![Build Status](https://secure.travis-ci.org/FGRibreau/node-amqp-dsl.png)](http://travis-ci.org/FGRibreau/node-amqp-dsl) [![Gittip](http://badgr.co/gittip/fgribreau.png)](https://www.gittip.com/fgribreau/) ## 
 
 AMQP-DSL is a [fluent interface](http://en.wikipedia.org/wiki/Fluent_interface) wrapper for [node-amqp](https://github.com/postwait/node-amqp) and help you write AMQP binding code in a clean and efficient way.
 
