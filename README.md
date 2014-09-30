@@ -1,4 +1,4 @@
-## Fluent Interface for dealing with AMQP on NodeJS [![Build Status](https://secure.travis-ci.org/FGRibreau/node-amqp-dsl.png)](http://travis-ci.org/FGRibreau/node-amqp-dsl) ##
+## Fluent Interface for dealing with AMQP on NodeJS [![Build Status](https://secure.travis-ci.org/FGRibreau/node-amqp-dsl.png)](http://travis-ci.org/FGRibreau/node-amqp-dsl) [![Gittip](http://badgr.co/gittip/fgribreau.png)](https://www.gittip.com/fgribreau/)
 
 AMQP-DSL is a [fluent interface](http://en.wikipedia.org/wiki/Fluent_interface) wrapper for [node-amqp](https://github.com/postwait/node-amqp) and help you write AMQP binding code in a clean and efficient way.
 
@@ -128,6 +128,9 @@ v2.0.0 - Updated node-amqp to `0.2.0` and async to `0.9.0`
 v1.0.3 - Support for .connect()
 v1.0.2 - Critical bug fix
 v1.0.1 - .bind & .subscribe can now be called multiple times. This is the behavior that should have been in place since the beginning.
+
+## Donate
+[Donate Bitcoins](https://coinbase.com/checkouts/fc3041b9d8116e0b98e7d243c4727a30)
 
 ## License
 Copyright (c) 2014 Francois-Guillaume Ribreau
