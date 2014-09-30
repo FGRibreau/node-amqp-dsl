@@ -3,6 +3,7 @@ node_modules
 
 *.rdb
 *.log
+lib/
 
 # mac
 .DS_Store

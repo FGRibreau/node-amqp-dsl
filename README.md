@@ -124,10 +124,11 @@ The `amqp` argument is simply hashtable with the following properties:
     $ npm test
 
 ## Release History
+v2.0.0 - Updated node-amqp to `0.2.0` and async to `0.9.0`
 v1.0.3 - Support for .connect()
 v1.0.2 - Critical bug fix
 v1.0.1 - .bind & .subscribe can now be called multiple times. This is the behavior that should have been in place since the beginning.
 
 ## License
-Copyright (c) 2013 Francois-Guillaume Ribreau
+Copyright (c) 2014 Francois-Guillaume Ribreau
 Licensed under the MIT license.

@@ -1,7 +1,7 @@
 {spawn, exec} = require 'child_process'
 
 task 'build', 'continually build the amqp-dsl library with --watch', ->
-  coffee = spawn 'coffee', ['-cw', '-o', 'lib', 'src']
+  coffee = spawn 'coffee', ['-cw', '--no-header', '-o', 'lib', 'src']
   coffee.stdout.on 'data', (data) -> console.log data.toString().trim()
 
 task 'install', 'install dependencies', ->
