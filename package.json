@@ -1,8 +1,11 @@
 {
   "name": "amqp-dsl",
   "description": "Amqp-DSL - Fluent interface for node-amqp",
-  "keywords": ["amqp", "dsl"],
-  "version": "2.0.1",
+  "keywords": [
+    "amqp",
+    "dsl"
+  ],
+  "version": "2.0.2",
   "homepage": "https://github.com/FGRibreau/node-amqp-dsl",
   "repository": "",
   "dependencies": {
