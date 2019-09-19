@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "vows": "~0.7.0",
-    "grunt": "~0.3.17"
+    "grunt": "~1.0.4"
   },
   "scripts": {
     "test": "vows --spec"
